@@ -14,16 +14,30 @@ func Valid(luhn string) bool {
 
 func Generate(targetSize int) string {
 	targetSize--
+
+	random := randomString(targetSize)
+	controlDigit := strconv.Itoa(generateControlDigit(random))
+
+	return random + controlDigit
+}
+
+func GenerateWithPrefix(targetSize int, prefix string) string {
+	targetSize = targetSize - 1 - len(prefix)
+
+	random := prefix + randomString(targetSize)
+	controlDigit := strconv.Itoa(generateControlDigit(random))
+
+	return random + controlDigit
+}
+
+func randomString(targetSize int) string {
 	source := make([]int, targetSize)
 
 	for i := 0; i < targetSize; i++ {
 		source[i] = rand.Intn(9)
 	}
 
-	random := integersToString(source)
-	controlDigit := strconv.Itoa(generateControlDigit(random))
-
-	return random + controlDigit
+	return integersToString(source)
 }
 
 func generateControlDigit(luhn string) int {
@@ -40,7 +54,7 @@ func calculateChecksum(luhn string, double bool) int {
 	source := strings.Split(luhn, "")
 	checksum := 0
 
-	for i := len(luhn)-1; i > -1; i-- {
+	for i := len(luhn) - 1; i > -1; i-- {
 		t, _ := strconv.ParseInt(source[i], 10, 8)
 		n := int(t)
 

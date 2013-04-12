@@ -41,3 +41,22 @@ func TestGeneratesValidLuhn(t *testing.T) {
 		t.Error("Expected generated string to be valid luhn", generated)
 	}
 }
+
+func TestGeneratesLuhnWithPrefix(t *testing.T) {
+	length := 10
+	prefix := "12345"
+	generated := GenerateWithPrefix(length, prefix)
+
+	if len(generated) != length {
+		t.Errorf("Expected generated string to have length %d was %d", length, len(generated))
+	}
+
+	generated_prefix := generated[0:5]
+	if generated_prefix != prefix {
+		t.Errorf("Expected prefix to equal %s, was %s", prefix, generated_prefix)
+	}
+
+	if !Valid(generated) {
+		t.Error("Expected generated string to be valid luhn", generated)
+	}
+}
