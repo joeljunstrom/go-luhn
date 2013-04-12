@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Valid(luhn string) bool {
@@ -31,6 +32,7 @@ func GenerateWithPrefix(targetSize int, prefix string) string {
 }
 
 func randomString(targetSize int) string {
+	rand.Seed(time.Now().UTC().UnixNano())
 	source := make([]int, targetSize)
 
 	for i := 0; i < targetSize; i++ {

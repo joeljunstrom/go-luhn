@@ -1,9 +1,7 @@
 package luhn
 
 import (
-	"math/rand"
 	"testing"
-	"time"
 )
 
 func TestValid(t *testing.T) {
@@ -28,9 +26,7 @@ func TestGeneratesTheControlDigit(t *testing.T) {
 }
 
 func TestGeneratesValidLuhn(t *testing.T) {
-	rand.Seed(time.Now().UTC().UnixNano())
-
-	var length int = rand.Intn(32) + 1
+	length := 32
 	generated := Generate(length)
 
 	if len(generated) != length {
