@@ -7,45 +7,40 @@ import (
 )
 
 func Valid(luhn string) bool {
-	checksum := calculateChecksum(luhn, false)
+	checksumMod := calculateChecksum(luhn, false) % 10
 
-	return (checksum % 10) == 0
+	return checksumMod == 0
 }
 
-func Generate(target_size int) string {
-	var random_size = target_size - 1
-	var source = make([]int, random_size)
+func Generate(targetSize int) string {
+	targetSize--
+	source := make([]int, targetSize)
 
-	for i := 0; i < random_size; i++ {
+	for i := 0; i < targetSize; i++ {
 		source[i] = rand.Intn(9)
 	}
 
-	temp := integersToString(source)
+	random := integersToString(source)
+	controlDigit := strconv.Itoa(generateControlDigit(random))
 
-	control_digit := generateControlDigit(temp)
-
-	generated := temp + strconv.Itoa(control_digit)
-
-	return generated
+	return random + controlDigit
 }
 
 func generateControlDigit(luhn string) int {
-	checksum := calculateChecksum(luhn, true)
-	control_digit := checksum % 10
+	controlDigit := calculateChecksum(luhn, true) % 10
 
-	if control_digit != 0 {
-		control_digit = 10 - control_digit
+	if controlDigit != 0 {
+		controlDigit = 10 - controlDigit
 	}
 
-	return control_digit
+	return controlDigit
 }
 
 func calculateChecksum(luhn string, double bool) int {
 	source := strings.Split(luhn, "")
-	var checksum int = 0
-	var length = len(luhn) - 1
+	checksum := 0
 
-	for i := length; i > -1; i-- {
+	for i := len(luhn)-1; i > -1; i-- {
 		t, _ := strconv.ParseInt(source[i], 10, 8)
 		n := int(t)
 
@@ -65,11 +60,10 @@ func calculateChecksum(luhn string, double bool) int {
 }
 
 func integersToString(integers []int) string {
-	length := len(integers)
-	var result = make([]string, length)
+	result := make([]string, len(integers))
 
-	for i := 0; i < length; i++ {
-		result[i] = strconv.Itoa(integers[i])
+	for i, number := range integers {
+		result[i] = strconv.Itoa(number)
 	}
 
 	return strings.Join(result, "")
