@@ -1,5 +1,7 @@
 package luhn
 
+// Utility functions for generating valid luhn strings and validating against the Luhn algorithm
+
 import (
 	"math/rand"
 	"strconv"
@@ -7,43 +9,47 @@ import (
 	"time"
 )
 
-func Valid(luhn string) bool {
-	checksumMod := calculateChecksum(luhn, false) % 10
+// Valid returns a boolean indicating if the argument was valid according to the Luhn algorithm.
+func Valid(luhnString string) bool {
+	checksumMod := calculateChecksum(luhnString, false) % 10
 
 	return checksumMod == 0
 }
 
-func Generate(targetSize int) string {
-	targetSize--
-
-	random := randomString(targetSize)
+// Generate creates and returns a string of the length of the argument targetSize.
+// The returned string is valid according to the Luhn algorithm.
+func Generate(size int) string {
+	random := randomString(size - 1)
 	controlDigit := strconv.Itoa(generateControlDigit(random))
 
 	return random + controlDigit
 }
 
-func GenerateWithPrefix(targetSize int, prefix string) string {
-	targetSize = targetSize - 1 - len(prefix)
+// GenerateWithPrefix creates and returns a string of the length of the argument targetSize
+// but prefixed with the second argument.
+// The returned string is valid according to the Luhn algorithm.
+func GenerateWithPrefix(size int, prefix string) string {
+	size = size - 1 - len(prefix)
 
-	random := prefix + randomString(targetSize)
+	random := prefix + randomString(size)
 	controlDigit := strconv.Itoa(generateControlDigit(random))
 
 	return random + controlDigit
 }
 
-func randomString(targetSize int) string {
+func randomString(size int) string {
 	rand.Seed(time.Now().UTC().UnixNano())
-	source := make([]int, targetSize)
+	source := make([]int, size)
 
-	for i := 0; i < targetSize; i++ {
+	for i := 0; i < size; i++ {
 		source[i] = rand.Intn(9)
 	}
 
 	return integersToString(source)
 }
 
-func generateControlDigit(luhn string) int {
-	controlDigit := calculateChecksum(luhn, true) % 10
+func generateControlDigit(luhnString string) int {
+	controlDigit := calculateChecksum(luhnString, true) % 10
 
 	if controlDigit != 0 {
 		controlDigit = 10 - controlDigit
@@ -52,11 +58,11 @@ func generateControlDigit(luhn string) int {
 	return controlDigit
 }
 
-func calculateChecksum(luhn string, double bool) int {
-	source := strings.Split(luhn, "")
+func calculateChecksum(luhnString string, double bool) int {
+	source := strings.Split(luhnString, "")
 	checksum := 0
 
-	for i := len(luhn) - 1; i > -1; i-- {
+	for i := len(source) - 1; i > -1; i-- {
 		t, _ := strconv.ParseInt(source[i], 10, 8)
 		n := int(t)
 

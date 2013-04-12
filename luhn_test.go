@@ -5,23 +5,24 @@ import (
 )
 
 func TestValid(t *testing.T) {
-	var test string = "1111111116"
-	if !Valid(test) {
-		t.Error("Expexted to be valid", test)
-	}
-}
+	test := "1111111116"
 
-func TestNotValid(t *testing.T) {
-	var test string = "1111111111"
+	if !Valid(test) {
+		t.Errorf("Expexted ”%s” to be valid according to the Luhn algorithm", test)
+	}
+
+	test = "1111111111"
+
 	if Valid(test) {
-		t.Error("Expexted to be invalid", test)
+		t.Errorf("Expexted ”%s” to be invalid according to the Luhn algorithm", test)
 	}
 }
 
 func TestGeneratesTheControlDigit(t *testing.T) {
 	control_digit := generateControlDigit("811218987")
+
 	if control_digit != 6 {
-		t.Error("Expexted control_digit to be 6, was", control_digit)
+		t.Error("Expexted control_digit to equal 6, was", control_digit)
 	}
 }
 
