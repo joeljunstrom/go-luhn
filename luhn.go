@@ -69,6 +69,7 @@ func calculateChecksum(luhnString string, double bool) int {
 		if double {
 			n = n * 2
 		}
+
 		double = !double
 
 		if n >= 10 {
